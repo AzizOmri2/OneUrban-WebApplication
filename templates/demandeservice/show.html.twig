@@ -1,0 +1,51 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}OneUrban | Dashboard | Détails Demande Service{% endblock %}
+
+{% block body %}
+    <h1>| Détails Demande Service</h1>
+    <br>
+    <div style="background-color:#fff;">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Date</th>
+                    <td>{{ demandeservice.date ? demandeservice.date|date('Y-m-d') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Statut</th>
+                    <td>
+                        {% if demandeservice.status == 'PENDING' %}
+                            <span class="label label-warning">Pending</span>
+                        {% elseif demandeservice.status == 'APPROVED' %}
+                            <span class="label label-success">Approved</span>
+                        {% elseif demandeservice.status == 'REJECTED' %}
+                            <span class="label label-danger">Rejected</span>
+                        {% else %}
+                            <span class="label label-secondary">{{ demandeservice.status }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Service</th>
+                    <td>
+                        <span class="label label-info">{{ demandeservice.service.nom }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="background-color:#fff;" align="center">
+        <br>
+            <button style="width:100px;" class="btn btn-block btn-info btn-sm">
+                <a style="color:#fff;" href="{{ path('app_demandeservice_index') }}">Back To List</a>
+            </button>
+            &nbsp;
+            <button style="margin-top:-50px;margin-left:160px;width:40px;" class="btn btn-block btn-success btn-sm">
+                <a style="color:#fff;" href="{{ path('app_demandeservice_edit', {'id': demandeservice.id}) }}"><i class="fa fa-edit"></i></a>
+            </button>
+            <br>
+        </div>
+    </div>
+
+    
+{% endblock %}

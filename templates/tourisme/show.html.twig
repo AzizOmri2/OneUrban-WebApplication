@@ -1,0 +1,67 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}OneUrban | Dashboard | Détails Tourisme{% endblock %}
+
+{% block body %}
+    <h1>| Détails Tourisme</h1>
+    <br>
+    <div style="background-color:#fff;">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Nom</th>
+                    <td>{{ tourisme.nom }}</td>
+                </tr>
+                <tr>
+                    <th>Type</th>
+                    <td>
+                        {% if tourisme.type == 'HOTEL' %}
+                            <span class="label label-primary">Hotel</span>
+                        {% elseif tourisme.type == 'GUIDED_TOUR' %}
+                            <span class="label label-success">Guided Tour</span>
+                        {% elseif tourisme.type == 'CAMPING' %}
+                            <span class="label label-danger">Camping</span>
+                        {% else %}
+                            <span class="label label-warning">{{ tourisme.type }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Localisation</th>
+                    <td>{{ tourisme.localisation }}</td>
+                </tr>
+                <tr>
+                    <th>Nombre des Etoiles</th>
+                    <td>
+                        {% for i in 1..5 %}
+                            {% if i <= tourisme.nbEtoiles %}
+                                <i class="fa fa-star"></i>  <!-- Full star -->
+                            {% else %}
+                                <i class="fa fa-star-o"></i>  <!-- Empty star -->
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Contact</th>
+                    <td><strong>+216 </strong>{{ tourisme.contact }}</td>
+                </tr>
+                <tr>
+                    <th>Marge des Prix</th>
+                    <td>{{ tourisme.priceRange }}<strong> DT</strong></td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="background-color:#fff;" align="center">
+        <br>
+            <button style="width:100px;" class="btn btn-block btn-info btn-sm">
+                <a style="color:#fff;" href="{{ path('app_tourisme_index') }}">Back To List</a>
+            </button>
+            &nbsp;
+            <button style="margin-top:-50px;margin-left:160px;width:40px;" class="btn btn-block btn-success btn-sm">
+                <a style="color:#fff;" href="{{ path('app_tourisme_edit', {'id': tourisme.id}) }}"><i class="fa fa-edit"></i></a>
+            </button>
+            <br>
+        </div>
+    </div>
+{% endblock %}

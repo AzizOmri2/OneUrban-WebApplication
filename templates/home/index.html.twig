@@ -1,0 +1,114 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}OneUrban | Dashboard{% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-yellow">
+            <div class="inner">
+                <h3>{{ number_users }}</h3>
+                <p>Nombre des Utilisateurs</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ path('app_user_index') }}" class="small-box-footer">Plus de détails <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-aqua">
+            <div class="inner">
+                <h3>{{ number_billets }}</h3>
+                <p>Nombre des Billets</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-bag"></i>
+            </div>
+            <a href="{{ path('app_billet_index') }}" class="small-box-footer">Plus de détails <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3>{{ percentage_services_requested }}<sup style="font-size: 20px">%</sup></h3>
+                <p>Pourcentage des Demandes</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="{{ path('app_demandeservice_index') }}" class="small-box-footer">Plus de détails <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-red">
+            <div class="inner">
+                <h3>{{ satisfaction_perc }}<sup style="font-size: 20px">%</sup></h3>
+                <p>Pourcentage de Satisfaction</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+            </div>
+            <a href="{{ path('app_tourisme_index') }}" class="small-box-footer">Plus de détails <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>
+
+<br>
+<div style="margin-left:500px;" class="row">
+    <button class="btn btn-info btn-sm" id="meteoBtn">Afficher la température</button>
+    <strong>
+        <p style="margin-top:-25px;margin-left:150px;" id="tempResult"></p>
+    </strong>
+</div>
+
+<br><br>
+<div style="margin-left:150px;" class="row">
+    <section class="col-lg-10 connectedSortable">
+        <div class="box box-success">
+            <div class="box-header">
+                <i class="fa fa-comments-o"></i>
+                <h3 class="box-title">Quelques réclamations</h3>
+            </div>
+            <div class="box-body chat">
+                <br><br><br>
+                {% for reclamation in best_reclamations %}
+                    <div class="item">
+                        <p class="message">
+                            <a href="{{ path('app_user_show' , {'id': reclamation.user}) }}" class="name">
+                                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> {{ reclamation.date ? reclamation.date|date('Y-m-d') : ''  }}</small>
+                                {{ reclamation.user.prenom }} {{ reclamation.user.nom }}
+                            </a>
+                            {{ reclamation.description }}
+                        </p>
+                    </div>
+                    <br><br>
+                {% endfor %}
+            </div>
+            <div class="box-footer">
+                <div class="input-group">
+                    <div align="center" class="input-group-btn">
+                        <button class="btn btn-success btn-sm">
+                            <a style="color:#fff" href="{{ path('app_reclamation_index') }}">Plus de détails</a>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+<script>
+    document.getElementById("meteoBtn").addEventListener("click", function() {
+        fetch('/weather')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("tempResult").innerText = "La température est : " + data.temperature + "°C";
+            });
+    });
+</script>
+
+{% endblock %}

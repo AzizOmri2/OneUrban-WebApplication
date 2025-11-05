@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}OneUrban | Register{% endblock %}
+
+{% block auth %}
+    <div class="register-box">
+        <div class="register-logo">
+            <a href="/"><b>One</b>Urban</a>
+        </div>
+
+        {# Affichage des erreurs #}
+        {% for flash_error in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ flash_error }}
+            </div>
+        {% endfor %}
+
+        <div class="register-box-body">
+            <p class="login-box-msg">Inscrivez-vous pour créer un nouveau compte</p>
+            {{ form_start(form,{'attr':{'novalidate':'novalidate'}},{'attr':{'class':'form-horizontal'}}) }}
+                <div class="form-group has-feedback">
+                    {{ form_widget(form.nom,{'attr':{'class':'form-control'}})}}
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    {% if form_errors(form.nom) is not empty %}
+                    <div class="form-group has-error">
+                            <label class="form-text text-muted">{{ form_errors(form.nom) }}</label>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group has-feedback">
+                    {{ form_widget(form.prenom,{'attr':{'class':'form-control'}})}}
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    {% if form_errors(form.prenom) is not empty %}
+                    <div class="form-group has-error">
+                            <label class="form-text text-muted">{{ form_errors(form.prenom) }}</label>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group has-feedback">
+                    {{ form_widget(form.email,{'attr':{'class':'form-control'}})}}
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    {% if form_errors(form.email) is not empty %}
+                    <div class="form-group has-error">
+                            <label class="form-text text-muted">{{ form_errors(form.email) }}</label>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group has-feedback">
+                    {{ form_widget(form.num_carte,{'attr':{'class':'form-control'}})}}
+                    <span class="glyphicon glyphicon-credit-card form-control-feedback"></span>
+                    {% if form_errors(form.num_carte) is not empty %}
+                    <div class="form-group has-error">
+                            <label class="form-text text-muted">{{ form_errors(form.num_carte) }}</label>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group has-feedback">
+                    {{ form_widget(form.adresse,{'attr':{'class':'form-control'}})}}
+                    <span class="glyphicon glyphicon-globe form-control-feedback"></span>
+                    {% if form_errors(form.adresse) is not empty %}
+                        <div class="form-group has-error">
+                            <label class="form-text text-muted">{{ form_errors(form.adresse) }}</label>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group has-feedback">
+                    {{ form_widget(form.motDePasse.first, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre mot de passe'}}) }}
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    {% if form_errors(form.motDePasse.first) is not empty %}
+                        <div class="form-group has-error">
+                            <label class="form-text text-muted">{{ form_errors(form.motDePasse.first) }}</label>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group has-feedback">
+                    {{ form_widget(form.motDePasse.second, {'attr': {'class': 'form-control', 'placeholder': 'Confirmez votre mot de passe'}}) }}
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    {% if form_errors(form.motDePasse.second) is not empty %}
+                        <div class="form-group has-error">
+                            <label class="form-text text-muted">{{ form_errors(form.motDePasse.second) }}</label>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group has-feedback">
+                    {{ form_widget(form.role,{'attr':{'class':'form-control'}})}}
+                    <span class="glyphicon glyphicon-align-left form-control-feedback"></span>
+                    {% if form_errors(form.role) is not empty %}
+                        <div class="form-group has-error">
+                            <label class="form-text text-muted">{{ form_errors(form.role) }}</label>
+                        </div>
+                    {% endif %}
+                </div>
+                <br>
+                <div class="row">
+                    <div style="margin-left:25px;" class="col-xs-10">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">S'inscrire</button>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+            
+            <br>
+            <p align="center">J'ai déjà un compte. <a href="/login" class="text-center">Connexion</a></p>
+        </div>
+    </div>
+{% endblock %}

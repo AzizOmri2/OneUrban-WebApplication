@@ -1,0 +1,118 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}OneUrban | Dashboard | Liste des Tourismes{% endblock %}
+
+{% block body %}
+    <h1>| Liste des Tourismes</h1>
+
+    <button style="margin-left:50px;width:150px;" class="btn btn-block btn-primary">
+        <a style="color:#fff;" href="{{ path('app_tourisme_new') }}"><i class="fa fa-plus"></i> Créer un nouveau</a>
+    </button>
+    <br>
+    <div style="background-color:#fff;">
+        <br>
+        <input style="margin-left:30px;width:950px;" type="text" class="form-control" id="searchInput" placeholder="Search&hellip;">
+        <br><br>
+        <div style="margin-top:-135px;margin-left:1000px;" class="btn-group">
+            <button type="button" id="actionBtn" class="btn btn-info">Tri Par</button>
+            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="{{ path('app_tourisme_index') }}" onclick="setActionText(this)">Défaut</a></li>
+                <li class="divider"></li>
+                <li><a href="{{ path('app_tourisme_index_sort_nom') }}" onclick="setActionText(this)">Nom</a></li>
+                <li><a href="{{ path('app_tourisme_index_sort_localisation') }}" onclick="setActionText(this)">Localisation</a></li>
+                <li><a href="{{ path('app_tourisme_index_sort_nbEtoiles') }}" onclick="setActionText(this)">Nombre des Etoiles</a></li>
+                <li><a href="{{ path('app_tourisme_index_sort_type') }}" onclick="setActionText(this)">Type</a></li>
+            </ul>
+        </div>
+        <a style="margin-top:-175px;margin-left:1100px;" class="btn btn-warning" href="{{ path('app_tourisme_index_stat') }}">Statistiques</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Type</th>
+                    <th>Localisation</th>
+                    <th>Nombre des Etoiles</th>
+                    <th>Contact</th>
+                    <th>Marge des Prix</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for tourisme in tourismes %}
+                <tr>
+                    <td>{{ tourisme.nom }}</td>
+                    <td>
+                        {% if tourisme.type == 'HOTEL' %}
+                            <span class="label label-primary">Hotel</span>
+                        {% elseif tourisme.type == 'GUIDED_TOUR' %}
+                            <span class="label label-success">Guided Tour</span>
+                        {% elseif tourisme.type == 'CAMPING' %}
+                            <span class="label label-danger">Camping</span>
+                        {% else %}
+                            <span class="label label-warning">{{ tourisme.type }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ tourisme.localisation }}</td>
+                    <td>
+                        {% for i in 1..5 %}
+                            {% if i <= tourisme.nbEtoiles %}
+                                <i class="fa fa-star"></i>  <!-- Full star -->
+                            {% else %}
+                                <i class="fa fa-star-o"></i>  <!-- Empty star -->
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td><strong>+216 </strong>{{ tourisme.contact }}</td>
+                    <td>{{ tourisme.priceRange }}<strong> DT</strong></td>
+                    <td>
+                        <button style="width:30px;" class="btn btn-block btn-info btn-sm"><a style="color:#fff;" href="{{ path('app_tourisme_show', {'id': tourisme.id}) }}"><i class="fa fa-ellipsis-v"></i></a></button>
+                        &nbsp;
+                        <button style="margin-top:-50px;margin-left:35px;width:30px;" class="btn btn-block btn-success btn-sm"><a style="color:#fff;" href="{{ path('app_tourisme_edit', {'id': tourisme.id}) }}"><i class="fa fa-edit"></i></a></button>
+                        &nbsp;
+                        {{ include('tourisme/_delete_form.html.twig') }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">No Tourisme Found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+<script>
+    function setActionText(element) {
+        const actionBtn = document.getElementById("actionBtn");
+        actionBtn.textContent = element.textContent;
+    }
+</script>
+
+
+
+<script>
+	function filterTable() {
+        const filter = document.getElementById('searchInput').value.toUpperCase();
+        const rows = document.querySelectorAll('table tr');
+        for (let i = 1; i < rows.length; i++) {
+            const cols = rows[i].querySelectorAll('td');
+            let visible = false;
+            for (let j = 0; j < cols.length; j++) {
+                const cell = cols[j];
+                if (cell.innerText.toUpperCase().indexOf(filter) > -1) {
+                    visible = true;
+                    break;
+                }
+            }
+            rows[i].style.display = visible ? '' : 'none';
+        }
+    }
+    document.getElementById('searchInput').addEventListener('keyup', filterTable);
+</script>
+
+{% endblock %}

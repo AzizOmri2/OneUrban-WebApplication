@@ -1,0 +1,27 @@
+{% extends 'baseFront.html.twig' %}
+
+{% block title %} OneUrban | Merci {% endblock %}
+
+{% block body %}
+    {% for message in app.session.flashbag.get('success') %}
+        <script type="text/javascript">
+            alert("{{ message }}");
+        </script>
+    {% endfor %}
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="section-tittle text-center mb-100">
+                    <span>| Demande Service Ajoutée</span>
+                    <h2>Merci d'envoyer votre demande.</h2>
+                    <h2>La réponse est dans 48h.</h2>
+                    <br><br>
+                    <a class="btn btn-dark py-3 px-4" href="{{ path('app_service_index_front') }}">Retour à la Liste des Services</a>
+                    <a style="margin-left:10px;" class="btn btn-primary py-3 px-4 me-3 animated fadeIn" href="{{ path('app_demandeservice_user_id', {'id': app.user.id}) }}">Afficher Mes Demandes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

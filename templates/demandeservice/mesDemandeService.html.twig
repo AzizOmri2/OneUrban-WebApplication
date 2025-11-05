@@ -1,0 +1,54 @@
+{% extends 'baseFront.html.twig' %}
+
+{% block title %}OneUrban | Mes Demandes de Service{% endblock %}
+
+{% block body %}
+    <h1>| Mes Demandes de Service</h1>
+    <button style="margin-top:-80px;margin-left:560px;width:210px;" class="btn btn-block btn-info btn-sm"><a style="color:#fff;" href="{{ path('app_service_index_front') }}">Retour a la Liste des Services</a></button>
+    
+    <br><br>
+    <div style="background-color:#fff;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Statut</th>
+                    <th>Service</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for demandeservice in demandeservices %}
+                <tr>
+                    <td>{{ demandeservice.date ? demandeservice.date|date('Y-m-d') : '' }}</td>
+                    <td>
+                        {% if demandeservice.status == 'PENDING' %}
+                            <span class="btn btn-block btn-warning btn-sm">Pending</span>
+                        {% elseif demandeservice.status == 'APPROVED' %}
+                            <span class="btn btn-block btn-success btn-sm">Approved</span>
+                        {% elseif demandeservice.status == 'REJECTED' %}
+                            <span class="btn btn-block btn-danger btn-sm">Rejected</span>
+                        {% else %}
+                            <span class="btn btn-block btn-primary btn-sm">{{ demandeservice.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="btn btn-block btn-primary btn-sm">{{ demandeservice.service.nom }}</span>
+                    </td>
+                    <td>
+                        {{ include('demandeservice/_delete_formFront.html.twig') }}
+                        &nbsp;
+                        <button style="margin-top:-55px;margin-left:30px;width:30px;" class="btn btn-block btn-success btn-sm"><a style="color:#fff;" href="{{ path('app_demandeservice_edit_front', {'id': demandeservice.id}) }}"><i class="fa fa-edit"></i></a></button>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No Demande Service Found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+
+{% endblock %}
