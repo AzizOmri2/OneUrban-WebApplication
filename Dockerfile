@@ -18,8 +18,8 @@ COPY . .
 # 6. Install PHP dependencies without running scripts (avoid .env errors during build)
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# 7. Set permissions for var/ and vendor/ directories
-RUN chmod -R 777 var/ vendor/
+# 7. Ensure var/ exists and set permissions for var/ and vendor/
+RUN mkdir -p var/ && chmod -R 777 var/ vendor/
 
 # 8. Clear and warm up cache for production using environment variables from Render
 #    Symfony 6.4 reads APP_ENV and APP_SECRET from environment variables
