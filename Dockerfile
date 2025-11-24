@@ -15,11 +15,11 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # 5. Copy Symfony project files
 COPY . .
 
-# 6. Install PHP dependencies without running scripts (avoid .env errors during build)
+# 6. Install PHP dependencies without running scripts
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# 7. Ensure var/ exists and set permissions for var/ and vendor/
-RUN mkdir -p var/ && chmod -R 777 var/ vendor/
+# 7. Ensure var/ exists with proper permissions
+RUN mkdir -p var/cache var/log && chmod -R 777 var
 
 # 8. Expose Render port
 ENV PORT 10000
