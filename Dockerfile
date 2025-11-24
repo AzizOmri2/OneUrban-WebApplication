@@ -35,4 +35,5 @@ RUN sed -i "s/80/${PORT}/" /etc/apache2/ports.conf \
 
 EXPOSE ${PORT}
 
-CMD ["apache2-foreground"]
+CMD ["sh", "-c", "APP_ENV=prod apache2-foreground"]
+
