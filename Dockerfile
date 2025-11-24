@@ -1,20 +1,34 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
 
-WORKDIR /app
-
+# Install PHP extensions
 RUN apt-get update && apt-get install -y \
-    git unzip libpq-dev libzip-dev libonig-dev \
-    && docker-php-ext-install pdo pdo_mysql zip
+    git unzip libzip-dev libicu-dev \
+    && docker-php-ext-install pdo pdo_mysql intl zip opcache
 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Enable Apache Rewrite (required by Symfony)
+RUN a2enmod rewrite
 
+WORKDIR /var/www/html
+
+# Copy project
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader --no-scripts
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-RUN mkdir -p var/cache var/log && chmod -R 777 var
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader
 
+# Fix Symfony var/ permissions
+RUN mkdir -p var/cache var/log && chown -R www-data:www-data var
+
+# Render port
 ENV PORT=10000
-EXPOSE 10000
 
-CMD ["php", "-d", "variables_order=EGPCS", "-S", "0.0.0.0:10000", "-t", "public"]
+# Make Apache listen on Render’s dynamic port
+RUN sed -i "s/80/${PORT}/" /etc/apache2/ports.conf \
+ && sed -i "s/:80/:${PORT}/" /etc/apache2/sites-enabled/000-default.conf
+
+EXPOSE ${PORT}
+
+CMD ["apache2-foreground"]
