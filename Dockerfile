@@ -24,5 +24,5 @@ RUN mkdir -p var/ && chmod -R 777 var/ vendor/
 # 8. Expose Render port
 ENV PORT 10000
 
-# 9. Start Symfony built-in server on Render's $PORT
-CMD ["php", "-S", "0.0.0.0:$PORT", "-t", "public"]
+# 9. Start Symfony built-in server with dynamic port
+CMD sh -c "php -S 0.0.0.0:$PORT -t public"
