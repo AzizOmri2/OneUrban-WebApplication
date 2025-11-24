@@ -1,17 +1,13 @@
 <?php
 
 use App\Kernel;
-use Symfony\Component\Dotenv\Dotenv;
 
-$envFile = dirname(__DIR__).'/.env';
+require dirname(__DIR__).'/vendor/autoload_runtime.php';
 
-// Load .env only if it exists and we're not in production
-if (file_exists($envFile) && (($_SERVER['APP_ENV'] ?? 'prod') !== 'prod')) {
-    (new Dotenv())->loadEnv($envFile);
-}
-
-require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
-
+// Use environment variables directly
 return function (array $context) {
-    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+    $env = $_SERVER['APP_ENV'] ?? 'prod';
+    $debug = (bool) ($_SERVER['APP_DEBUG'] ?? ($env !== 'prod'));
+
+    return new Kernel($env, $debug);
 };
