@@ -1,28 +1,33 @@
-# Base image
+# 1. Use PHP 8.2 CLI image
 FROM php:8.2-cli
 
-# Set working directory
+# 2. Set working directory
 WORKDIR /app
 
-# Install dependencies
+# 3. Install system dependencies
 RUN apt-get update && apt-get install -y \
     git unzip libpq-dev libzip-dev libonig-dev \
     && docker-php-ext-install pdo pdo_mysql zip
 
-# Install Composer
+# 4. Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy project files
+# 5. Copy Symfony project files
 COPY . .
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# 6. Install PHP dependencies without running scripts (avoid .env errors during build)
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# Set permissions
-RUN chmod -R 777 var/
+# 7. Set permissions for var/ and vendor/ directories
+RUN chmod -R 777 var/ vendor/
 
-# Use Render's PORT
+# 8. Clear and warm up cache for production using environment variables from Render
+#    Symfony 6.4 reads APP_ENV and APP_SECRET from environment variables
+RUN php bin/console cache:clear --env=prod --no-warmup
+RUN php bin/console cache:warmup --env=prod
+
+# 9. Expose Render port
 ENV PORT 10000
 
-# Start Symfony app
+# 10. Start Symfony built-in server on Render's $PORT
 CMD ["php", "-S", "0.0.0.0:$PORT", "-t", "public"]
