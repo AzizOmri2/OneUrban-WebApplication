@@ -23,6 +23,11 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts
 RUN mkdir -p var/cache var/log var/sessions \
     && chown -R www-data:www-data var
 
+# Set Apache DocumentRoot to Symfony public/ folder and allow .htaccess
+RUN sed -i 's#/var/www/html#/var/www/html/public#g' /etc/apache2/sites-available/000-default.conf \
+ && sed -i 's#/var/www/html#/var/www/html/public#g' /etc/apache2/apache2.conf \
+ && sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+
 # Set Render dynamic port
 ENV PORT=10000
 RUN sed -i "s/80/${PORT}/" /etc/apache2/ports.conf \
@@ -30,5 +35,4 @@ RUN sed -i "s/80/${PORT}/" /etc/apache2/ports.conf \
 
 EXPOSE ${PORT}
 
-# Use entrypoint that does NOT call bin/console at build time
 CMD ["apache2-foreground"]
