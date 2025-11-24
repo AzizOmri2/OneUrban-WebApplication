@@ -1,28 +1,27 @@
-# 1. Use PHP 8.2 CLI image
-FROM php:8.2-cli
+# Use PHP-FPM
+FROM php:8.2-fpm
 
-# 2. Set working directory
 WORKDIR /app
 
-# 3. Install system dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     git unzip libpq-dev libzip-dev libonig-dev \
     && docker-php-ext-install pdo pdo_mysql zip
 
-# 4. Install Composer
+# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# 5. Copy Symfony project files
+# Copy project
 COPY . .
 
-# 6. Install PHP dependencies without running scripts
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# 7. Ensure var/ exists with proper permissions
+# Ensure var folders exist
 RUN mkdir -p var/cache var/log && chmod -R 777 var
 
-# 8. Expose Render port
+# Expose Render port
 ENV PORT 10000
 
-# 9. Start Symfony built-in server with dynamic port
-CMD sh -c "php -S 0.0.0.0:$PORT -t public"
+# Start PHP-FPM (Render uses port from env)
+CMD ["php-fpm"]
