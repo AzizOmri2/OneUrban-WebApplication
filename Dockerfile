@@ -21,13 +21,8 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts
 # 7. Ensure var/ exists and set permissions for var/ and vendor/
 RUN mkdir -p var/ && chmod -R 777 var/ vendor/
 
-# 8. Clear and warm up cache for production using environment variables from Render
-#    Symfony 6.4 reads APP_ENV and APP_SECRET from environment variables
-RUN php bin/console cache:clear --env=prod --no-warmup
-RUN php bin/console cache:warmup --env=prod
-
-# 9. Expose Render port
+# 8. Expose Render port
 ENV PORT 10000
 
-# 10. Start Symfony built-in server on Render's $PORT
+# 9. Start Symfony built-in server on Render's $PORT
 CMD ["php", "-S", "0.0.0.0:$PORT", "-t", "public"]
