@@ -16,7 +16,7 @@ COPY . .
 # Copy Composer from official image
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Install PHP dependencies without running auto-scripts
+# Install dependencies WITHOUT running auto-scripts (avoid cache:clear crash)
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Ensure var/ permissions
@@ -28,8 +28,7 @@ ENV PORT=10000
 RUN sed -i "s/80/${PORT}/" /etc/apache2/ports.conf \
     && sed -i "s/:80/:${PORT}/" /etc/apache2/sites-enabled/000-default.conf
 
-# Expose Render port
 EXPOSE ${PORT}
 
-# Entry point: clear cache and start Apache
-CMD ["sh", "-c", "php bin/console cache:clear --no-warmup --env=prod && apache2-foreground"]
+# Use entrypoint that does NOT call bin/console at build time
+CMD ["apache2-foreground"]
