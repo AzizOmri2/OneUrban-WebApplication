@@ -11,3 +11,5 @@ return function (array $context) {
 
     return new Kernel($env, $debug);
 };
+
+?>
